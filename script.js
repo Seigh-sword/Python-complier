@@ -1,11 +1,22 @@
 let editor;
 let pyodide;
 
-require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
+require.config({ 
+    paths: { vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' } 
+});
+
+window.MonacoEnvironment = {
+    getWorkerUrl: function(workerId, label) {
+        return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+            self.MonacoEnvironment = { baseUrl: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' };
+            importScripts('https://unpkg.com/monaco-editor@0.44.0/min/vs/base/worker/workerMain.js');`
+        )}`;
+    }
+};
 
 require(['vs/editor/editor.main'], async function () {
     editor = monaco.editor.create(document.getElementById('editor-container'), {
-        value: 'import numpy as np\n\nX = np.array([1, 2, 3])\nprint(f"Data: {X}")\nprint("System Ready.")',
+        value: 'import numpy as np\n\nprint("SYSTEM READY.")',
         language: 'python',
         theme: 'vs-dark',
         automaticLayout: true,
@@ -13,10 +24,14 @@ require(['vs/editor/editor.main'], async function () {
         minimap: { enabled: false }
     });
 
-    pyodide = await loadPyodide();
-    document.getElementById('loader').classList.add('hidden');
-    document.getElementById('run-btn').disabled = false;
-    document.getElementById('output').innerText = "READY.";
+    try {
+        pyodide = await loadPyodide();
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('run-btn').disabled = false;
+        document.getElementById('output').innerText = "READY.";
+    } catch (err) {
+        document.getElementById('output').innerText = "PYODIDE LOAD ERROR: " + err.message;
+    }
 });
 
 document.getElementById('run-btn').addEventListener('click', async () => {
