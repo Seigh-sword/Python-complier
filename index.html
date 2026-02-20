@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Compiler</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+</head>
+<body>
+    <div id="loader" class="loading-overlay"> Loading... </div>
+    <header>
+        <div class="title">COMPILER // MAIN.PY</div>
+        <button id="run-btn" disabled>RUN CODE</button>
+    </header>
+    <div id="editor-container"></div>
+    <div id="terminal">
+        <div class="terminal-header">TERMINAL</div>
+        <pre id="output">BOOTING...</pre>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
